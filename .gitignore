@@ -39,3 +39,4 @@ out/
 
 ### GraphHopper ###
 /src/main/resources/graphhopper/
+/target/routing-graph-cache/

@@ -37,7 +37,7 @@ public class RouteService {
         List<RouteStep> steps = new ArrayList<>();
         path.getInstructions().forEach(instruction -> {
             RouteStep step = new RouteStep(
-                    instruction.getTurnDescription(null),
+                    instruction.getName(),
                     instruction.getDistance() / 1000.0,
                     instruction.getTime() / 60000.0
             );

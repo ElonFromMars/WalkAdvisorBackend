@@ -6,10 +6,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.ResponsePath;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.Profile;
-import com.graphhopper.util.Instruction;
-import com.graphhopper.util.InstructionList;
-import com.graphhopper.util.PointList;
-import com.graphhopper.util.Translation;
+import com.graphhopper.util.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -25,12 +22,12 @@ public class GraphHopperService {
         // add all encoded values that are used in the custom model, these are also available as path details or for client-side custom models
         hopper.setEncodedValuesString("car_access, car_average_speed, road_access");
         // see docs/core/profiles.md to learn more about profiles
-        hopper.setProfiles(new Profile("car"));
+        hopper.setProfiles(new Profile("car").setCustomModel(GHUtility.loadCustomModelFromJar("car.json")));
         //hopper.setProfiles(new Profile("car").setCustomModel(GHUtility.loadCustomModelFromJar("car.json")));
 
         // this enables speed mode for the profile we called car
-        hopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
-
+        //hopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car").);
+        hopper.importOrLoad();
 
         // ... but for the hybrid mode we can customize the route calculation even at request time:
         // 1. a request with default preferences
