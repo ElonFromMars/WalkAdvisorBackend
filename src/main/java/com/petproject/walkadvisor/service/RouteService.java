@@ -21,11 +21,8 @@ public class RouteService {
     @Autowired
     private GraphHopperService graphHopperService;
     
-    public RouteData calculateRoute(String origin, String destination) {
-        double fromLat = 50.0647;
-        double fromLon = 19.9450;
-        double toLat = 50.0675;
-        double toLon = 19.9125;
+    public RouteData calculateRoute(double fromLat, double fromLon, double toLat, double toLon) {
+        //TODO Point origin, Point destination
 
         ResponsePath path = graphHopperService.getRoute(fromLat, fromLon, toLat, toLon);
 
