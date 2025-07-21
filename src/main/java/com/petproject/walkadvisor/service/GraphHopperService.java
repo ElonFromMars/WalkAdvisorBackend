@@ -43,20 +43,7 @@ public class GraphHopperService {
             throw new RuntimeException(rsp.getErrors().toString());
 
         // use the best path, see the GHResponse class for more possibilities.
-        ResponsePath path = rsp.getBest();
 
-        // points, distance in meters and time in millis of the full path
-        PointList pointList = path.getPoints();
-        double distance = path.getDistance();
-        long timeInMs = path.getTime();
-
-        Translation tr = hopper.getTranslationMap().getWithFallBack(Locale.UK);
-        InstructionList il = path.getInstructions();
-        // iterate over all turn instructions
-        for (Instruction instruction : il) {
-            // System.out.println("distance " + instruction.getDistance() + " for instruction: " + instruction.getTurnDescription(tr));
-        }
-
-        return path;
+        return rsp.getBest();
     }
 }

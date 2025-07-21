@@ -32,7 +32,7 @@ public class RouteController {
         CompletableFuture<double[]> originFuture = geoService.geocode(request.getOrigin());
         CompletableFuture<double[]> destinationFuture = geoService.geocode(request.getDestination()); // Assuming a destination field
 
-        return originFuture.thenCombine(destinationFuture, this::formatCoordinates)
+        return originFuture.thenCombineAsync(destinationFuture, this::formatCoordinates)
                 /*.exceptionally(this::handleError)*/;
     }
 

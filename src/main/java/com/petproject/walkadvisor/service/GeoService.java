@@ -1,27 +1,40 @@
 package com.petproject.walkadvisor.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.petproject.walkadvisor.dto.GeocodingResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.concurrent.CompletableFuture;
 
 @Service
 public class GeoService {
 
-    private static final String PHOTON_API = "https://photon.komoot.io/api";
-    private final RestTemplate restTemplate = new RestTemplate();
+    private static final String PHOTON_API = "https://photon.komoot.io";
 
     @Async
     public CompletableFuture<double[]> geocode(String address) {
-        String url = UriComponentsBuilder.fromHttpUrl(PHOTON_API)
-                .queryParam("q", address)
-                .queryParam("limit", 1)
-                .toUriString();
 
-        GeocodingResponse response = restTemplate.getForObject(url, GeocodingResponse.class);
+        WebClient webClient = WebClient.builder().baseUrl(PHOTON_API).build();
+        String responseJson = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api")
+                        .queryParam("q", address)
+                        .queryParam("limit", 1)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        ObjectMapper mapper = new ObjectMapper();
+        GeocodingResponse response = null;
+        try {
+            response = mapper.readValue(responseJson, GeocodingResponse.class);
+        } catch (JsonProcessingException e) {
+            //TODO
+        }
 
         if (response != null && !response.features.isEmpty()) {
             var coords = response.features.get(0).geometry.coordinates;
